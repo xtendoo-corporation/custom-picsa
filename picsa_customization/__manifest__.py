@@ -9,6 +9,7 @@
     ],
     "data": [
         "views/report_saleorder_document.xml",
+        "views/report_invoice_document.xml",
     ],
     "installable": True,
 }
