@@ -3,6 +3,12 @@
     <data>
         <template id="report_saleorder_document_inherit" inherit_id="sale.report_saleorder_document">
             <xpath expr="//span[@t-field='line.product_uom']" position="replace"/>
+            <xpath expr="//div[@class='clearfix']" position="after">
+                <t t-if="doc.payment_mode_id.name == 'Transferencia'">
+                    <br/>
+                    <span>Para pago por transferencia Nº Cuenta: ES04-3025-0007-7114-3328-5434</span>
+                </t>
+            </xpath>
         </template>
     </data>
 </odoo>
