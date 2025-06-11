@@ -1,11 +1,8 @@
 <odoo>
     <data>
         <template id="report_invoice_document_inherit" inherit_id="account.report_invoice_document">
-            <xpath expr="//div[@class='clearfix']" position="after">
-                <t t-if="o.payment_mode_id.name == 'Transferencia'">
-                    <br/>
-                    <span>Para pago por transferencia Nº Cuenta: ES04-3025-0007-7114-3328-5434</span>
-                </t>
+            <xpath expr="//p[@name='payment_communication']" position="replace">
+                <p>Para pago por transferencia Nº Cuenta: ES04-3025-0007-7114-3328-5434</p>
             </xpath>
         </template>
     </data>
