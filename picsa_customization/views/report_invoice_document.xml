@@ -2,8 +2,12 @@
     <data>
         <template id="report_invoice_document_inherit" inherit_id="account.report_invoice_document">
             <xpath expr="//p[@name='payment_communication']" position="replace">
-                <p>Para pago por transferencia Nº Cuenta: ES04-3025-0007-7114-3328-5434</p>
+                <p>En caso de pago por Transferencia Nº Cuenta: ES04-3025-0007-7114-3328-5434</p>
             </xpath>
         </template>
+         <template id="report_invoice_payment_mode_custom" inherit_id="account_payment_partner.report_invoice_payment_mode">
+        <xpath expr="//p[@t-foreach='o.sudo().partner_banks_to_show()']" position="replace">
+        </xpath>
+    </template>
     </data>
 </odoo>
