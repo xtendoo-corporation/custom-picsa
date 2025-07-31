@@ -6,6 +6,7 @@
     "license": "AGPL-3",
     "depends": [
         "sale",
+        "l10n_es_edi_facturae",
     ],
     "data": [
         "views/report_saleorder_document.xml",
