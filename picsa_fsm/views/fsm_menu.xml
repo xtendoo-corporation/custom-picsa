@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <record id="xtendoo_fsm.action_xtendoo_fsm_order" model="ir.actions.act_window">
+        <field name="view_mode">tree,form,kanban,calendar</field>
+    </record>
+
     <record id="act_picsa_fsm_service_state" model="ir.actions.act_window">
         <field name="name">Estados de Servicio</field>
         <field name="res_model">picsa.fsm.service.state</field>
@@ -53,5 +57,10 @@
               action="act_picsa_fsm_incident_type"
               sequence="30"/>
 
+    <menuitem id="menu_picsa_fsm_stage"
+              name="Etapas de Órdenes"
+              parent="menu_picsa_fsm_config"
+              action="xtendoo_fsm.action_xtendoo_fsm_stage"
+              sequence="40"/>
 
 </odoo>

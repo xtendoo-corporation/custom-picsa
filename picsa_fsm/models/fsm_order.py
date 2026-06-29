@@ -1,12 +1,17 @@
 # Copyright 2026 Xtendoo Software SLU
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl-3.0)
 
-from odoo import SUPERUSER_ID, _, fields, models
+from odoo import SUPERUSER_ID, _, api, fields, models
 from odoo.exceptions import UserError
 
 
 class FSMOrder(models.Model):
     _inherit = "fsm.order"
+
+    stage_display = fields.Html(
+        string="Estado",
+        compute="_compute_stage_display",
+    )
 
     description = fields.Html(
         string="Servicios a realizar",
@@ -73,6 +78,18 @@ class FSMOrder(models.Model):
         string="Material Retirado",
         domain=[("material_type", "=", "removed")],
     )
+
+    @api.depends("stage_id")
+    def _compute_stage_display(self):
+        for order in self:
+            if order.stage_id:
+                color = order.stage_id.color
+                name = order.stage_id.name
+                order.stage_display = (
+                    f'<span class="badge" style="background-color: {color};">{name}</span>'
+                )
+            else:
+                order.stage_display = False
 
     def _compute_picsa_counts(self):
         for order in self:
