@@ -20,155 +20,176 @@
     </template>
 
     <template id="report_picsa_fsm_incident_document">
-        <t t-call="web.basic_layout">
+        <t t-call="web.external_layout">
             <t t-set="doc" t-value="doc.with_context(lang=doc.partner_id.lang)"/>
-            <style>
-                .picsa-page { font-size: 13px; color: #111; }
-                .picsa-title { text-align: center; font-size: 22px; font-weight: 700; margin-top: 18px; border-bottom: 1px solid #333; }
-                .picsa-meta { text-align: right; font-size: 11px; line-height: 1.35; }
-                .picsa-logo { color: #0b4f86; font-size: 28px; font-weight: 800; letter-spacing: 1px; }
-                .picsa-logo-sub { color: #0b4f86; font-size: 8px; font-weight: 700; margin-top: -6px; }
-                .picsa-section-title { background: #cfcfcf; font-size: 16px; font-weight: 800; padding: 3px 6px; margin-top: 12px; text-transform: uppercase; }
-                .picsa-block { padding: 7px 8px; }
-                .picsa-label { font-weight: 700; }
-                .picsa-table { width: 100%; border-collapse: collapse; margin-top: 6px; }
-                .picsa-table th, .picsa-table td { border: 1px solid #333; padding: 6px; vertical-align: top; }
-                .picsa-table th { font-weight: 700; text-align: center; }
-                .picsa-state { display: inline-block; min-width: 170px; padding: 3px 12px; color: #111; }
-                .picsa-state-open { background: #f6c76a; }
-                .picsa-state-progress { background: #59b6e8; }
-                .picsa-state-done { background: #58b878; }
-                .picsa-state-cancelled { background: #d7d7d7; }
-                .picsa-line { border-bottom: 1px solid #ddd; padding: 8px 0; }
-            </style>
-            <div class="page picsa-page">
+            <div class="page">
+                <style>
+                    .picsa_fsm_report h2 { margin: 0 0 12px 0; font-size: 22px; }
+                    .picsa_fsm_report h5 {
+                        margin: 10px 0 7px 0;
+                        padding: 0;
+                        font-size: 15px;
+                        font-weight: 700;
+                    }
+                    .picsa_fsm_report address { margin-bottom: 0; }
+                    .picsa_fsm_report .table { margin-bottom: 10px; }
+                    .picsa_fsm_report .table-sm th,
+                    .picsa_fsm_report .table-sm td { padding: 4px 6px; }
+                    .picsa_fsm_report p { margin-bottom: 5px; }
+                    .picsa_fsm_report .picsa_block { margin-top: 12px; }
+                    .picsa_fsm_report .picsa_signature { padding-top: 4px; }
+                </style>
+                <div class="picsa_fsm_report">
+                <h2>Informe Parte de Incidencia</h2>
+
                 <div class="row">
                     <div class="col-6">
-                        <div class="picsa-logo">PICSA</div>
-                        <div class="picsa-logo-sub">SOLUCIONES INFORMATICAS S.L.</div>
+                        <h5>Cliente</h5>
+                        <address t-field="doc.partner_id"
+                                 t-options='{"widget": "contact", "fields": ["address", "name", "phone", "email"], "no_marker": True}'/>
                     </div>
-                    <div class="col-6 picsa-meta">
-                        <div>Fecha: <span t-field="doc.date_created" t-options="{'widget': 'date'}"/></div>
-                        <div>Núm: <span t-field="doc.name"/></div>
-                        <div>Pag: <span class="page"/>/<span class="topage"/></div>
-                    </div>
-                </div>
-
-                <div class="picsa-title">Informe Parte de Incidencia</div>
-
-                <div class="picsa-section-title">Cliente:</div>
-                <div class="picsa-block">
-                    <div><strong><span t-field="doc.partner_id.name"/></strong></div>
-                    <div t-if="doc.location_id">
-                        <span t-field="doc.location_id.street"/>
-                        <t t-if="doc.location_id.street2">, <span t-field="doc.location_id.street2"/></t>
-                    </div>
-                    <div t-if="doc.location_id">
-                        <span t-field="doc.location_id.zip"/> <span t-field="doc.location_id.city"/>
-                    </div>
-                    <div t-if="doc.contact_id">Persona Contacto: <span t-field="doc.contact_id.name"/></div>
-                    <div>
-                        Tel: <span t-esc="doc.contact_id.phone or doc.partner_id.phone or ''"/>
-                        <t t-if="doc.contact_id.email or doc.partner_id.email">
-                            Email: <span t-esc="doc.contact_id.email or doc.partner_id.email"/>
-                        </t>
+                    <div class="col-6 text-end">
+                        <div><strong>Parte:</strong> <span t-field="doc.name"/></div>
+                        <div><strong>Fecha:</strong> <span t-field="doc.date_created" t-options="{'widget': 'date'}"/></div>
+                        <div t-if="doc.stage_id"><strong>Estado:</strong> <span t-field="doc.stage_id"/></div>
                     </div>
                 </div>
 
-                <div class="picsa-section-title">Incidencia:</div>
-                <div class="picsa-block">
-                    <t t-set="incident" t-value="doc.incident_ids[:1]"/>
-                    <div><strong><span t-esc="incident.name if incident else doc.description"/></strong></div>
-                    <div class="row">
-                        <div class="col-7">
-                            <div><span class="picsa-label">Responsable:</span> <span t-esc="incident.responsible_id.name if incident else (doc.responsible_id.name or '')"/></div>
-                            <div><span class="picsa-label">Abierto:</span> <span t-esc="format_datetime(incident.create_date) if incident and incident.create_date else ''"/></div>
-                            <div><span class="picsa-label">Fecha Incidencia:</span> <span t-esc="format_datetime(incident.incident_date) if incident and incident.incident_date else ''"/></div>
-                            <div><span class="picsa-label">Tipo Incidencia:</span> <span t-esc="dict(incident._fields['incident_type'].selection).get(incident.incident_type, '') if incident else ''"/></div>
-                        </div>
-                        <div class="col-5">
-                            <div>
-                                <span class="picsa-label">Estado:</span>
-                                <span t-if="incident"
-                                      t-att-class="'picsa-state picsa-state-%s' % (incident.state == 'in_progress' and 'progress' or incident.state)">
-                                    <span t-esc="dict(incident._fields['state'].selection).get(incident.state)"/>
-                                </span>
-                            </div>
-                            <div><span class="picsa-label">Actualizado:</span> <span t-esc="format_datetime(incident.write_date) if incident and incident.write_date else ''"/></div>
-                        </div>
-                    </div>
+                <div class="picsa_block">
+                    <h5>Incidencia</h5>
+                    <table class="table table-sm table-borderless">
+                        <tbody>
+                            <tr>
+                                <td class="fw-bold w-25">Nombre de Incidencia</td>
+                                <td colspan="3">
+                                    <span t-field="doc.incident_name"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="fw-bold">Responsable</td>
+                                <td><span t-field="doc.incident_responsible_id"/></td>
+                                <td class="fw-bold">Estado</td>
+                                <td><span t-esc="dict(doc._fields['incident_state'].selection).get(doc.incident_state, '')"/></td>
+                            </tr>
+                            <tr>
+                                <td class="fw-bold">Abierto</td>
+                                <td><span t-field="doc.incident_open_date"/></td>
+                                <td class="fw-bold">Actualizado</td>
+                                <td><span t-field="doc.incident_update_date"/></td>
+                            </tr>
+                            <tr>
+                                <td class="fw-bold">Fecha de Incidencia</td>
+                                <td><span t-field="doc.incident_date"/></td>
+                                <td class="fw-bold">Tipo de Incidencia</td>
+                                <td><span t-field="doc.incident_type_id"/></td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
 
-                <div class="picsa-section-title">Servicios a Realizar:</div>
-                <div class="picsa-block">
-                    <span t-field="doc.description"/>
+                <div class="picsa_block">
+                    <h5>Servicios a realizar</h5>
+                    <div t-field="doc.description"/>
                 </div>
 
-                <div class="picsa-section-title">Material Instalado</div>
-                <table class="picsa-table">
-                    <thead>
-                        <tr>
-                            <th style="width: 6%;">Nº</th>
-                            <th style="width: 12%;">Marca</th>
-                            <th style="width: 18%;">Modelo</th>
-                            <th>Nº Serie</th>
-                            <th style="width: 14%;">Cantidad</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr style="height: 72px;"><td></td><td></td><td></td><td></td><td></td></tr>
-                    </tbody>
-                </table>
+                <div class="picsa_block">
+                    <h5>Material Instalado</h5>
+                    <table class="table table-sm o_main_table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Nº</th>
+                                <th>Marca</th>
+                                <th>Modelo</th>
+                                <th>Nº Serie</th>
+                                <th>Cantidad</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="doc.material_installed_ids" t-as="material">
+                                <td><span t-field="material.sequence"/></td>
+                                <td><span t-field="material.brand"/></td>
+                                <td><span t-field="material.model_id"/></td>
+                                <td><span t-field="material.serial_number"/></td>
+                                <td><span t-field="material.quantity"/></td>
+                            </tr>
+                            <tr t-if="not doc.material_installed_ids">
+                                <td colspan="5" class="text-muted">Sin material instalado.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
 
-                <div class="picsa-section-title">Material Retirado</div>
-                <table class="picsa-table">
-                    <thead>
-                        <tr>
-                            <th style="width: 6%;">Nº</th>
-                            <th style="width: 12%;">Marca</th>
-                            <th style="width: 18%;">Modelo</th>
-                            <th>Nº Serie</th>
-                            <th style="width: 14%;">Cantidad</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr style="height: 72px;"><td></td><td></td><td></td><td></td><td></td></tr>
-                    </tbody>
-                </table>
+                <div class="picsa_block">
+                    <h5>Material Retirado</h5>
+                    <table class="table table-sm o_main_table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Nº</th>
+                                <th>Marca</th>
+                                <th>Modelo</th>
+                                <th>Nº Serie</th>
+                                <th>Cantidad</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="doc.material_removed_ids" t-as="material">
+                                <td><span t-field="material.sequence"/></td>
+                                <td><span t-field="material.brand"/></td>
+                                <td><span t-field="material.model_id"/></td>
+                                <td><span t-field="material.serial_number"/></td>
+                                <td><span t-field="material.quantity"/></td>
+                            </tr>
+                            <tr t-if="not doc.material_removed_ids">
+                                <td colspan="5" class="text-muted">Sin material retirado.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
 
-                <div class="picsa-section-title">Servicios Realizados</div>
-                <div class="picsa-block">
+                <div class="picsa_block">
+                    <h5>Servicios Realizados</h5>
+                    <table class="table table-sm o_main_table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Técnico Asignado</th>
+                                <th>Fecha Inicio</th>
+                                <th>Fecha Fin</th>
+                                <th>Método Intervención</th>
+                                <th>Km</th>
+                                <th>Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="doc.picsa_service_ids" t-as="service">
+                                <td><span t-field="service.id"/></td>
+                                <td><span t-field="service.technician_id"/></td>
+                                <td><span t-field="service.date_start"/></td>
+                                <td><span t-field="service.date_end"/></td>
+                                <td><span t-esc="dict(service._fields['intervention_method'].selection).get(service.intervention_method, '')"/></td>
+                                <td><span t-field="service.km"/></td>
+                                <td><span t-esc="dict(service._fields['state'].selection).get(service.state, '')"/></td>
+                            </tr>
+                            <tr t-if="not doc.picsa_service_ids">
+                                <td colspan="7" class="text-muted">Sin servicios realizados.</td>
+                            </tr>
+                        </tbody>
+                    </table>
                     <t t-foreach="doc.picsa_service_ids" t-as="service">
-                        <div class="picsa-line">
-                            <div class="row">
-                                <div class="col-2"><strong>#<span t-field="service.id"/></strong></div>
-                                <div class="col-5">
-                                    <div><span class="picsa-label">Técnico asignado:</span> <span t-field="service.technician_id"/></div>
-                                    <div>
-                                        <span class="picsa-label">Fecha:</span>
-                                        <span t-field="service.date_start" t-options="{'widget': 'date'}"/>
-                                        <span class="picsa-label">Inicio:</span> <span t-field="service.date_start" t-options="{'widget': 'time'}"/>
-                                        <span class="picsa-label">Fin:</span> <span t-field="service.date_end" t-options="{'widget': 'time'}"/>
-                                    </div>
-                                    <div>
-                                        <span class="picsa-label">Método Intervención:</span>
-                                        <span t-esc="dict(service._fields['intervention_method'].selection).get(service.intervention_method, '')"/>
-                                        <span class="picsa-label">Km:</span> <span t-field="service.km"/>
-                                    </div>
-                                </div>
-                                <div class="col-5">
-                                    <span class="picsa-label">Estado:</span>
-                                    <span t-att-class="'picsa-state picsa-state-%s' % (service.state == 'in_progress' and 'progress' or service.state)">
-                                        <span t-esc="dict(service._fields['state'].selection).get(service.state)"/>
-                                    </span>
-                                </div>
-                            </div>
-                            <div t-if="service.notes" style="margin-top: 6px;">
+                        <div class="row mt-1" t-if="service.notes or service.signature">
+                            <div class="col-8">
+                                <strong>Descripción #<span t-field="service.id"/>:</strong>
                                 <span t-field="service.notes"/>
+                            </div>
+                            <div class="col-4 picsa_signature" t-if="service.signature">
+                                <strong>Firma:</strong>
+                                <br/>
+                                <img t-att-src="image_data_uri(service.signature)"
+                                     style="max-height: 64px; max-width: 200px;"/>
                             </div>
                         </div>
                     </t>
-                    <div t-if="not doc.picsa_service_ids" style="height: 56px;"></div>
+                </div>
                 </div>
             </div>
         </t>

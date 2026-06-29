@@ -9,6 +9,8 @@
     "author": "Xtendoo",
     "license": "AGPL-3",
     "depends": [
+        "account",
+        "product",
         "xtendoo_fsm",
     ],
     "data": [

@@ -5,8 +5,23 @@
         <field name="model">fsm.order</field>
         <field name="inherit_id" ref="xtendoo_fsm.view_xtendoo_fsm_order_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//sheet" position="inside">
-                <field name="incident_count" invisible="1"/>
+            <xpath expr="//group[@name='service_info']" position="replace">
+                <group name="picsa_incident_info" string="Incidencia">
+                    <field name="incident_name"/>
+                    <field name="incident_responsible_id"/>
+                    <field name="incident_open_date"/>
+                    <field name="incident_date"/>
+                    <field name="incident_type_id"/>
+                    <field name="incident_update_date"/>
+                    <field name="incident_state"/>
+                </group>
+            </xpath>
+            <xpath expr="//group[@name='customer_info']" position="attributes">
+                <attribute name="string">Información Básica</attribute>
+            </xpath>
+            <xpath expr="//group[@name='customer_info']" position="inside">
+                <field name="description" string="Servicios a realizar"
+                       widget="html" placeholder="Describe los servicios a realizar..."/>
             </xpath>
             <xpath expr="//button[@name='action_create_repair']" position="attributes">
                 <attribute name="invisible">1</attribute>
@@ -14,28 +29,46 @@
             <xpath expr="//button[@name='action_view_repairs']" position="attributes">
                 <attribute name="invisible">1</attribute>
             </xpath>
-            <xpath expr="//button[@name='action_create_repair']" position="after">
-                <button name="action_create_incident" string="Crear Incidencia"
-                        type="object" class="btn-secondary"/>
+            <xpath expr="//button[@name='action_create_sale_order']" position="attributes">
+                <attribute name="invisible">sale_count &gt; 0</attribute>
             </xpath>
-            <xpath expr="//div[@name='button_box']" position="inside">
-                <button name="action_view_incidents" type="object"
-                        class="oe_stat_button" icon="fa-life-ring"
-                        invisible="incident_count == 0">
-                    <field name="incident_count" widget="statinfo" string="Incidencias"/>
-                </button>
+            <xpath expr="//button[@name='action_create_sale_order']" position="after">
+                <button name="action_create_invoice" string="Crear Factura"
+                        type="object" class="btn-secondary"
+                        invisible="invoice_count &gt; 0"/>
+            </xpath>
+            <xpath expr="//sheet" position="inside">
+                <field name="invoice_count" invisible="1"/>
+            </xpath>
+            <xpath expr="//group[@name='basic_info']" position="replace"/>
+            <xpath expr="//group[@name='scheduling']" position="replace"/>
+            <xpath expr="//notebook/page[.//field[@name='internal_note']]" position="attributes">
+                <attribute name="invisible">1</attribute>
             </xpath>
             <xpath expr="//notebook" position="inside">
-                <page string="Incidencias" name="picsa_incidents">
-                    <field name="incident_ids" context="{'default_fsm_order_id': id}">
-                        <tree editable="bottom" string="Incidencias">
-                            <field name="name" string="Nombre de Incidencia"/>
-                            <field name="responsible_id" string="Responsable"/>
-                            <field name="create_date" string="Abierto" readonly="1"/>
-                            <field name="incident_date"/>
-                            <field name="incident_type"/>
-                            <field name="write_date" string="Actualizado" readonly="1"/>
-                            <field name="state"/>
+                <page string="Material Instalado" name="picsa_material_installed">
+                    <field name="material_installed_ids"
+                           context="{'default_fsm_order_id': id, 'default_material_type': 'installed'}">
+                        <tree editable="bottom" string="Material Instalado">
+                            <field name="material_type" column_invisible="1"/>
+                            <field name="sequence"/>
+                            <field name="brand"/>
+                            <field name="model_id"/>
+                            <field name="serial_number"/>
+                            <field name="quantity"/>
+                        </tree>
+                    </field>
+                </page>
+                <page string="Material Retirado" name="picsa_material_removed">
+                    <field name="material_removed_ids"
+                           context="{'default_fsm_order_id': id, 'default_material_type': 'removed'}">
+                        <tree editable="bottom" string="Material Retirado">
+                            <field name="material_type" column_invisible="1"/>
+                            <field name="sequence"/>
+                            <field name="brand"/>
+                            <field name="model_id"/>
+                            <field name="serial_number"/>
+                            <field name="quantity"/>
                         </tree>
                     </field>
                 </page>
@@ -43,70 +76,21 @@
                     <field name="picsa_service_ids" context="{'default_fsm_order_id': id}">
                         <tree editable="bottom" string="Servicios Realizados">
                             <field name="id" string="ID" readonly="1"/>
-                            <field name="technician_id"/>
-                            <field name="date_start"/>
-                            <field name="date_end"/>
-                            <field name="intervention_method"/>
-                            <field name="km"/>
-                            <field name="state"/>
-                            <field name="notes"/>
+                            <field name="technician_id" readonly="state == 'done'"/>
+                            <field name="date_start" readonly="state == 'done'"/>
+                            <field name="date_end" readonly="state == 'done'"/>
+                            <field name="intervention_method" readonly="state == 'done'"/>
+                            <field name="km" readonly="state == 'done'"/>
+                            <field name="state" readonly="state == 'done'"/>
+                            <field name="notes" readonly="state == 'done'"/>
+                            <button name="action_open_signature_wizard" string="Firmar" type="object"
+                                    class="btn-link"/>
+                            <button name="action_reopen" string="Reabrir" type="object"
+                                    class="btn-link" invisible="state != 'done'"/>
                         </tree>
                     </field>
                 </page>
             </xpath>
-        </field>
-    </record>
-
-    <record id="view_fsm_incident_tree" model="ir.ui.view">
-        <field name="name">fsm.incident.tree</field>
-        <field name="model">fsm.incident</field>
-        <field name="arch" type="xml">
-            <tree string="Incidencias">
-                <field name="name"/>
-                <field name="fsm_order_id"/>
-                <field name="responsible_id"/>
-                <field name="create_date" string="Abierto"/>
-                <field name="incident_date"/>
-                <field name="incident_type"/>
-                <field name="write_date" string="Actualizado"/>
-                <field name="state"/>
-            </tree>
-        </field>
-    </record>
-
-    <record id="view_fsm_incident_form" model="ir.ui.view">
-        <field name="name">fsm.incident.form</field>
-        <field name="model">fsm.incident</field>
-        <field name="arch" type="xml">
-            <form string="Incidencia">
-                <header>
-                    <field name="state" widget="statusbar"/>
-                </header>
-                <sheet>
-                    <div class="oe_title">
-                        <h1>
-                            <field name="name"/>
-                        </h1>
-                    </div>
-                    <group>
-                        <group>
-                            <field name="fsm_order_id"/>
-                            <field name="responsible_id"/>
-                            <field name="incident_type"/>
-                        </group>
-                        <group>
-                            <field name="create_date" string="Abierto" readonly="1"/>
-                            <field name="incident_date"/>
-                            <field name="write_date" string="Actualizado" readonly="1"/>
-                        </group>
-                    </group>
-                </sheet>
-                <div class="oe_chatter">
-                    <field name="message_follower_ids"/>
-                    <field name="activity_ids"/>
-                    <field name="message_ids"/>
-                </div>
-            </form>
         </field>
     </record>
 
@@ -117,14 +101,42 @@
             <tree string="Servicios Realizados">
                 <field name="id" string="ID"/>
                 <field name="fsm_order_id"/>
-                <field name="technician_id"/>
-                <field name="date_start"/>
-                <field name="date_end"/>
-                <field name="intervention_method"/>
-                <field name="km"/>
-                <field name="state"/>
-                <field name="notes"/>
+                <field name="technician_id" readonly="state == 'done'"/>
+                <field name="date_start" readonly="state == 'done'"/>
+                <field name="date_end" readonly="state == 'done'"/>
+                <field name="intervention_method" readonly="state == 'done'"/>
+                <field name="km" readonly="state == 'done'"/>
+                <field name="state" readonly="state == 'done'"/>
+                <field name="notes" readonly="state == 'done'"/>
+                <button name="action_open_signature_wizard" string="Firmar" type="object"
+                        class="btn-link"/>
+                <button name="action_reopen" string="Reabrir" type="object"
+                        class="btn-link" invisible="state != 'done'"/>
             </tree>
+        </field>
+    </record>
+
+    <record id="view_picsa_fsm_incident_type_tree" model="ir.ui.view">
+        <field name="name">picsa.fsm.incident.type.tree</field>
+        <field name="model">picsa.fsm.incident.type</field>
+        <field name="arch" type="xml">
+            <tree string="Tipos de Incidencia">
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_picsa_fsm_incident_type_form" model="ir.ui.view">
+        <field name="name">picsa.fsm.incident.type.form</field>
+        <field name="model">picsa.fsm.incident.type</field>
+        <field name="arch" type="xml">
+            <form string="Tipo de Incidencia">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                    </group>
+                </sheet>
+            </form>
         </field>
     </record>
 
@@ -133,18 +145,84 @@
         <field name="model">picsa.fsm.service</field>
         <field name="arch" type="xml">
             <form string="Servicio Realizado">
+                <header>
+                    <button name="action_open_signature_wizard" string="Firmar y Enviar"
+                            type="object" class="btn-primary"/>
+                    <button name="action_reopen" string="Reabrir" type="object"
+                            class="btn-primary" invisible="state != 'done'"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,in_progress,to_invoice,to_close,done"/>
+                </header>
+                <sheet>
+                    <group>
+                        <field name="fsm_order_id" readonly="state == 'done'"/>
+                        <field name="technician_id" readonly="state == 'done'"/>
+                    </group>
+                    <group>
+                        <field name="date_start" readonly="state == 'done'"/>
+                        <field name="date_end" readonly="state == 'done'"/>
+                        <field name="intervention_method" readonly="state == 'done'"/>
+                        <field name="km" readonly="state == 'done'"/>
+                        <field name="notes" readonly="state == 'done'"/>
+                    </group>
+                    <group string="Firma">
+                        <field name="signature" widget="image" readonly="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_picsa_fsm_service_signature_wizard_form" model="ir.ui.view">
+        <field name="name">picsa.fsm.service.signature.wizard.form</field>
+        <field name="model">picsa.fsm.service.signature.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Firmar Servicio">
+                <field name="service_id" invisible="1"/>
+                <group>
+                    <field name="signature" widget="signature"/>
+                </group>
+                <footer>
+                    <button name="action_sign" string="Firmar"
+                            type="object" class="btn-secondary"/>
+                    <button name="action_sign_and_send" string="Firmar y Enviar"
+                            type="object" class="btn-primary"/>
+                    <button string="Cancelar" special="cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_picsa_fsm_material_tree" model="ir.ui.view">
+        <field name="name">picsa.fsm.material.tree</field>
+        <field name="model">picsa.fsm.material</field>
+        <field name="arch" type="xml">
+            <tree string="Materiales">
+                <field name="fsm_order_id"/>
+                <field name="material_type"/>
+                <field name="sequence"/>
+                <field name="brand"/>
+                <field name="model_id"/>
+                <field name="serial_number"/>
+                <field name="quantity"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_picsa_fsm_material_form" model="ir.ui.view">
+        <field name="name">picsa.fsm.material.form</field>
+        <field name="model">picsa.fsm.material</field>
+        <field name="arch" type="xml">
+            <form string="Material">
                 <sheet>
                     <group>
                         <field name="fsm_order_id"/>
-                        <field name="technician_id"/>
-                        <field name="state"/>
-                    </group>
-                    <group>
-                        <field name="date_start"/>
-                        <field name="date_end"/>
-                        <field name="intervention_method"/>
-                        <field name="km"/>
-                        <field name="notes"/>
+                        <field name="material_type"/>
+                        <field name="sequence"/>
+                        <field name="brand"/>
+                        <field name="model_id"/>
+                        <field name="serial_number"/>
+                        <field name="quantity"/>
                     </group>
                 </sheet>
             </form>

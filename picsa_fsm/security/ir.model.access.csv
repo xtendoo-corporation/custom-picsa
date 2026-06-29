@@ -1,5 +1,9 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_picsa_fsm_service_user,picsa.fsm.service.user,model_picsa_fsm_service,xtendoo_fsm.group_fsm_user,1,1,1,0
 access_picsa_fsm_service_manager,picsa.fsm.service.manager,model_picsa_fsm_service,xtendoo_fsm.group_fsm_manager,1,1,1,1
-access_fsm_incident_user,fsm.incident.user,model_fsm_incident,xtendoo_fsm.group_fsm_user,1,1,1,0
-access_fsm_incident_manager,fsm.incident.manager,model_fsm_incident,xtendoo_fsm.group_fsm_manager,1,1,1,1
+access_picsa_fsm_material_user,picsa.fsm.material.user,model_picsa_fsm_material,xtendoo_fsm.group_fsm_user,1,1,1,0
+access_picsa_fsm_material_manager,picsa.fsm.material.manager,model_picsa_fsm_material,xtendoo_fsm.group_fsm_manager,1,1,1,1
+access_picsa_fsm_incident_type_user,picsa.fsm.incident.type.user,model_picsa_fsm_incident_type,xtendoo_fsm.group_fsm_user,1,1,1,0
+access_picsa_fsm_incident_type_manager,picsa.fsm.incident.type.manager,model_picsa_fsm_incident_type,xtendoo_fsm.group_fsm_manager,1,1,1,1
+access_picsa_fsm_service_signature_wizard_user,picsa.fsm.service.signature.wizard.user,model_picsa_fsm_service_signature_wizard,xtendoo_fsm.group_fsm_user,1,1,1,1
+access_picsa_fsm_service_signature_wizard_manager,picsa.fsm.service.signature.wizard.manager,model_picsa_fsm_service_signature_wizard,xtendoo_fsm.group_fsm_manager,1,1,1,1
