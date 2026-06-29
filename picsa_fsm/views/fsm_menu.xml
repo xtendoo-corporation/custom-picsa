@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="act_picsa_fsm_service_state" model="ir.actions.act_window">
+        <field name="name">Estados de Servicio</field>
+        <field name="res_model">picsa.fsm.service.state</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="act_picsa_fsm_intervention_method" model="ir.actions.act_window">
+        <field name="name">Métodos de Intervención</field>
+        <field name="res_model">picsa.fsm.intervention.method</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="act_picsa_fsm_incident_type" model="ir.actions.act_window">
+        <field name="name">Tipos de Incidencia</field>
+        <field name="res_model">picsa.fsm.incident.type</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="act_picsa_fsm_service" model="ir.actions.act_window">
+        <field name="name">Servicios Realizados</field>
+        <field name="res_model">picsa.fsm.service</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="act_picsa_fsm_material" model="ir.actions.act_window">
+        <field name="name">Materiales</field>
+        <field name="res_model">picsa.fsm.material</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_picsa_fsm_config"
+              name="PICSA"
+              parent="xtendoo_fsm.xtendoo_fsm_menu_config"
+              sequence="30"/>
+
+    <menuitem id="menu_picsa_fsm_service_state"
+              name="Estados de Servicio"
+              parent="menu_picsa_fsm_config"
+              action="act_picsa_fsm_service_state"
+              sequence="10"/>
+
+    <menuitem id="menu_picsa_fsm_intervention_method"
+              name="Métodos de Intervención"
+              parent="menu_picsa_fsm_config"
+              action="act_picsa_fsm_intervention_method"
+              sequence="20"/>
+
+    <menuitem id="menu_picsa_fsm_incident_type"
+              name="Tipos de Incidencia"
+              parent="menu_picsa_fsm_config"
+              action="act_picsa_fsm_incident_type"
+              sequence="30"/>
+
+
+</odoo>

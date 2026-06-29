@@ -13,7 +13,7 @@
                     <field name="incident_date"/>
                     <field name="incident_type_id"/>
                     <field name="incident_update_date"/>
-                    <field name="incident_state"/>
+                    <field name="stage_id" string="Estado"/>
                 </group>
             </xpath>
             <xpath expr="//group[@name='customer_info']" position="attributes">
@@ -32,14 +32,7 @@
             <xpath expr="//button[@name='action_create_sale_order']" position="attributes">
                 <attribute name="invisible">sale_count &gt; 0</attribute>
             </xpath>
-            <xpath expr="//button[@name='action_create_sale_order']" position="after">
-                <button name="action_create_invoice" string="Crear Factura"
-                        type="object" class="btn-secondary"
-                        invisible="invoice_count &gt; 0"/>
-            </xpath>
-            <xpath expr="//sheet" position="inside">
-                <field name="invoice_count" invisible="1"/>
-            </xpath>
+
             <xpath expr="//group[@name='basic_info']" position="replace"/>
             <xpath expr="//group[@name='scheduling']" position="replace"/>
             <xpath expr="//notebook/page[.//field[@name='internal_note']]" position="attributes">
@@ -76,17 +69,18 @@
                     <field name="picsa_service_ids" context="{'default_fsm_order_id': id}">
                         <tree editable="bottom" string="Servicios Realizados">
                             <field name="id" string="ID" readonly="1"/>
-                            <field name="technician_id" readonly="state == 'done'"/>
-                            <field name="date_start" readonly="state == 'done'"/>
-                            <field name="date_end" readonly="state == 'done'"/>
-                            <field name="intervention_method" readonly="state == 'done'"/>
-                            <field name="km" readonly="state == 'done'"/>
-                            <field name="state" readonly="state == 'done'"/>
-                            <field name="notes" readonly="state == 'done'"/>
+                            <field name="state_code" column_invisible="1"/>
+                            <field name="technician_id" readonly="state_code == 'done'"/>
+                            <field name="date_start" readonly="state_code == 'done'"/>
+                            <field name="date_end" readonly="state_code == 'done'"/>
+                            <field name="intervention_method_id" readonly="state_code == 'done'"/>
+                            <field name="km" readonly="state_code == 'done'"/>
+                            <field name="state_id" readonly="state_code == 'done'"/>
+                            <field name="notes" readonly="state_code == 'done'"/>
                             <button name="action_open_signature_wizard" string="Firmar" type="object"
                                     class="btn-link"/>
                             <button name="action_reopen" string="Reabrir" type="object"
-                                    class="btn-link" invisible="state != 'done'"/>
+                                    class="btn-link" invisible="state_code != 'done'"/>
                         </tree>
                     </field>
                 </page>
@@ -101,17 +95,18 @@
             <tree string="Servicios Realizados">
                 <field name="id" string="ID"/>
                 <field name="fsm_order_id"/>
-                <field name="technician_id" readonly="state == 'done'"/>
-                <field name="date_start" readonly="state == 'done'"/>
-                <field name="date_end" readonly="state == 'done'"/>
-                <field name="intervention_method" readonly="state == 'done'"/>
-                <field name="km" readonly="state == 'done'"/>
-                <field name="state" readonly="state == 'done'"/>
-                <field name="notes" readonly="state == 'done'"/>
+                <field name="state_code" column_invisible="1"/>
+                <field name="technician_id" readonly="state_code == 'done'"/>
+                <field name="date_start" readonly="state_code == 'done'"/>
+                <field name="date_end" readonly="state_code == 'done'"/>
+                <field name="intervention_method_id" readonly="state_code == 'done'"/>
+                <field name="km" readonly="state_code == 'done'"/>
+                <field name="state_id" readonly="state_code == 'done'"/>
+                <field name="notes" readonly="state_code == 'done'"/>
                 <button name="action_open_signature_wizard" string="Firmar" type="object"
                         class="btn-link"/>
                 <button name="action_reopen" string="Reabrir" type="object"
-                        class="btn-link" invisible="state != 'done'"/>
+                        class="btn-link" invisible="state_code != 'done'"/>
             </tree>
         </field>
     </record>
@@ -140,6 +135,70 @@
         </field>
     </record>
 
+    <record id="view_picsa_fsm_service_state_tree" model="ir.ui.view">
+        <field name="name">picsa.fsm.service.state.tree</field>
+        <field name="model">picsa.fsm.service.state</field>
+        <field name="arch" type="xml">
+            <tree string="Estados de Servicio">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="is_default"/>
+                <field name="is_closed"/>
+                <field name="active"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_picsa_fsm_service_state_form" model="ir.ui.view">
+        <field name="name">picsa.fsm.service.state.form</field>
+        <field name="model">picsa.fsm.service.state</field>
+        <field name="arch" type="xml">
+            <form string="Estado de Servicio">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="code"/>
+                        <field name="sequence"/>
+                        <field name="is_default"/>
+                        <field name="is_closed"/>
+                        <field name="active"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_picsa_fsm_intervention_method_tree" model="ir.ui.view">
+        <field name="name">picsa.fsm.intervention.method.tree</field>
+        <field name="model">picsa.fsm.intervention.method</field>
+        <field name="arch" type="xml">
+            <tree string="Métodos de Intervención">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="active"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_picsa_fsm_intervention_method_form" model="ir.ui.view">
+        <field name="name">picsa.fsm.intervention.method.form</field>
+        <field name="model">picsa.fsm.intervention.method</field>
+        <field name="arch" type="xml">
+            <form string="Método de Intervención">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="code"/>
+                        <field name="sequence"/>
+                        <field name="active"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
     <record id="view_picsa_fsm_service_form" model="ir.ui.view">
         <field name="name">picsa.fsm.service.form</field>
         <field name="model">picsa.fsm.service</field>
@@ -149,21 +208,21 @@
                     <button name="action_open_signature_wizard" string="Firmar y Enviar"
                             type="object" class="btn-primary"/>
                     <button name="action_reopen" string="Reabrir" type="object"
-                            class="btn-primary" invisible="state != 'done'"/>
-                    <field name="state" widget="statusbar"
-                           statusbar_visible="draft,in_progress,to_invoice,to_close,done"/>
+                            class="btn-primary" invisible="state_code != 'done'"/>
                 </header>
                 <sheet>
+                    <field name="state_code" invisible="1"/>
                     <group>
-                        <field name="fsm_order_id" readonly="state == 'done'"/>
-                        <field name="technician_id" readonly="state == 'done'"/>
+                        <field name="fsm_order_id" readonly="state_code == 'done'"/>
+                        <field name="technician_id" readonly="state_code == 'done'"/>
+                        <field name="state_id" readonly="state_code == 'done'"/>
                     </group>
                     <group>
-                        <field name="date_start" readonly="state == 'done'"/>
-                        <field name="date_end" readonly="state == 'done'"/>
-                        <field name="intervention_method" readonly="state == 'done'"/>
-                        <field name="km" readonly="state == 'done'"/>
-                        <field name="notes" readonly="state == 'done'"/>
+                        <field name="date_start" readonly="state_code == 'done'"/>
+                        <field name="date_end" readonly="state_code == 'done'"/>
+                        <field name="intervention_method_id" readonly="state_code == 'done'"/>
+                        <field name="km" readonly="state_code == 'done'"/>
+                        <field name="notes" readonly="state_code == 'done'"/>
                     </group>
                     <group string="Firma">
                         <field name="signature" widget="image" readonly="1"/>

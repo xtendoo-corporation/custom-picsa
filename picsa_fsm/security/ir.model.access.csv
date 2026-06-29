@@ -5,5 +5,9 @@ access_picsa_fsm_material_user,picsa.fsm.material.user,model_picsa_fsm_material,
 access_picsa_fsm_material_manager,picsa.fsm.material.manager,model_picsa_fsm_material,xtendoo_fsm.group_fsm_manager,1,1,1,1
 access_picsa_fsm_incident_type_user,picsa.fsm.incident.type.user,model_picsa_fsm_incident_type,xtendoo_fsm.group_fsm_user,1,1,1,0
 access_picsa_fsm_incident_type_manager,picsa.fsm.incident.type.manager,model_picsa_fsm_incident_type,xtendoo_fsm.group_fsm_manager,1,1,1,1
+access_picsa_fsm_service_state_user,picsa.fsm.service.state.user,model_picsa_fsm_service_state,xtendoo_fsm.group_fsm_user,1,1,1,0
+access_picsa_fsm_service_state_manager,picsa.fsm.service.state.manager,model_picsa_fsm_service_state,xtendoo_fsm.group_fsm_manager,1,1,1,1
+access_picsa_fsm_intervention_method_user,picsa.fsm.intervention.method.user,model_picsa_fsm_intervention_method,xtendoo_fsm.group_fsm_user,1,1,1,0
+access_picsa_fsm_intervention_method_manager,picsa.fsm.intervention.method.manager,model_picsa_fsm_intervention_method,xtendoo_fsm.group_fsm_manager,1,1,1,1
 access_picsa_fsm_service_signature_wizard_user,picsa.fsm.service.signature.wizard.user,model_picsa_fsm_service_signature_wizard,xtendoo_fsm.group_fsm_user,1,1,1,1
 access_picsa_fsm_service_signature_wizard_manager,picsa.fsm.service.signature.wizard.manager,model_picsa_fsm_service_signature_wizard,xtendoo_fsm.group_fsm_manager,1,1,1,1

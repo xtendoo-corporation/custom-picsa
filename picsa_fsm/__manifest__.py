@@ -15,8 +15,10 @@
     ],
     "data": [
         "security/ir.model.access.csv",
+        "data/picsa_fsm_data.xml",
         "report/fsm_order_incident_report.xml",
         "views/fsm_order_views.xml",
+        "views/fsm_menu.xml",
     ],
     "installable": True,
     "application": False,

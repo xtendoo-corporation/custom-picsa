@@ -69,7 +69,7 @@
                                 <td class="fw-bold">Responsable</td>
                                 <td><span t-field="doc.incident_responsible_id"/></td>
                                 <td class="fw-bold">Estado</td>
-                                <td><span t-esc="dict(doc._fields['incident_state'].selection).get(doc.incident_state, '')"/></td>
+                                <td><span t-field="doc.stage_id"/></td>
                             </tr>
                             <tr>
                                 <td class="fw-bold">Abierto</td>
@@ -166,9 +166,9 @@
                                 <td><span t-field="service.technician_id"/></td>
                                 <td><span t-field="service.date_start"/></td>
                                 <td><span t-field="service.date_end"/></td>
-                                <td><span t-esc="dict(service._fields['intervention_method'].selection).get(service.intervention_method, '')"/></td>
+                                <td><span t-field="service.intervention_method_id"/></td>
                                 <td><span t-field="service.km"/></td>
-                                <td><span t-esc="dict(service._fields['state'].selection).get(service.state, '')"/></td>
+                                <td><span t-field="service.state_id"/></td>
                             </tr>
                             <tr t-if="not doc.picsa_service_ids">
                                 <td colspan="7" class="text-muted">Sin servicios realizados.</td>
