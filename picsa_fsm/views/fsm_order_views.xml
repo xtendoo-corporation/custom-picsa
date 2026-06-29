@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_fsm_order_form_inherit_picsa_fsm" model="ir.ui.view">
+        <field name="name">fsm.order.form.inherit.picsa.fsm</field>
+        <field name="model">fsm.order</field>
+        <field name="inherit_id" ref="xtendoo_fsm.view_xtendoo_fsm_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="inside">
+                <field name="incident_count" invisible="1"/>
+            </xpath>
+            <xpath expr="//button[@name='action_create_repair']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_view_repairs']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_create_repair']" position="after">
+                <button name="action_create_incident" string="Crear Incidencia"
+                        type="object" class="btn-secondary"/>
+            </xpath>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_view_incidents" type="object"
+                        class="oe_stat_button" icon="fa-life-ring"
+                        invisible="incident_count == 0">
+                    <field name="incident_count" widget="statinfo" string="Incidencias"/>
+                </button>
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page string="Incidencias" name="picsa_incidents">
+                    <field name="incident_ids" context="{'default_fsm_order_id': id}">
+                        <tree editable="bottom" string="Incidencias">
+                            <field name="name" string="Nombre de Incidencia"/>
+                            <field name="responsible_id" string="Responsable"/>
+                            <field name="create_date" string="Abierto" readonly="1"/>
+                            <field name="incident_date"/>
+                            <field name="incident_type"/>
+                            <field name="write_date" string="Actualizado" readonly="1"/>
+                            <field name="state"/>
+                        </tree>
+                    </field>
+                </page>
+                <page string="Servicios Realizados" name="picsa_services">
+                    <field name="picsa_service_ids" context="{'default_fsm_order_id': id}">
+                        <tree editable="bottom" string="Servicios Realizados">
+                            <field name="id" string="ID" readonly="1"/>
+                            <field name="technician_id"/>
+                            <field name="date_start"/>
+                            <field name="date_end"/>
+                            <field name="intervention_method"/>
+                            <field name="km"/>
+                            <field name="state"/>
+                            <field name="notes"/>
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_fsm_incident_tree" model="ir.ui.view">
+        <field name="name">fsm.incident.tree</field>
+        <field name="model">fsm.incident</field>
+        <field name="arch" type="xml">
+            <tree string="Incidencias">
+                <field name="name"/>
+                <field name="fsm_order_id"/>
+                <field name="responsible_id"/>
+                <field name="create_date" string="Abierto"/>
+                <field name="incident_date"/>
+                <field name="incident_type"/>
+                <field name="write_date" string="Actualizado"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_fsm_incident_form" model="ir.ui.view">
+        <field name="name">fsm.incident.form</field>
+        <field name="model">fsm.incident</field>
+        <field name="arch" type="xml">
+            <form string="Incidencia">
+                <header>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="fsm_order_id"/>
+                            <field name="responsible_id"/>
+                            <field name="incident_type"/>
+                        </group>
+                        <group>
+                            <field name="create_date" string="Abierto" readonly="1"/>
+                            <field name="incident_date"/>
+                            <field name="write_date" string="Actualizado" readonly="1"/>
+                        </group>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_picsa_fsm_service_tree" model="ir.ui.view">
+        <field name="name">picsa.fsm.service.tree</field>
+        <field name="model">picsa.fsm.service</field>
+        <field name="arch" type="xml">
+            <tree string="Servicios Realizados">
+                <field name="id" string="ID"/>
+                <field name="fsm_order_id"/>
+                <field name="technician_id"/>
+                <field name="date_start"/>
+                <field name="date_end"/>
+                <field name="intervention_method"/>
+                <field name="km"/>
+                <field name="state"/>
+                <field name="notes"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_picsa_fsm_service_form" model="ir.ui.view">
+        <field name="name">picsa.fsm.service.form</field>
+        <field name="model">picsa.fsm.service</field>
+        <field name="arch" type="xml">
+            <form string="Servicio Realizado">
+                <sheet>
+                    <group>
+                        <field name="fsm_order_id"/>
+                        <field name="technician_id"/>
+                        <field name="state"/>
+                    </group>
+                    <group>
+                        <field name="date_start"/>
+                        <field name="date_end"/>
+                        <field name="intervention_method"/>
+                        <field name="km"/>
+                        <field name="notes"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>
