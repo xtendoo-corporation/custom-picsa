@@ -99,14 +99,14 @@
                 <page string="Servicios Realizados" name="picsa_services">
                     <field name="picsa_service_ids" context="{'default_fsm_order_id': id}">
                         <tree editable="bottom" string="Servicios Realizados">
-                            <field name="id" string="ID" readonly="1"/>
+                            <field name="id" string="ID" readonly="1" column_invisible="1"/>
                             <field name="state_code" column_invisible="1"/>
                             <field name="technician_id" readonly="state_code == 'done'"/>
                             <field name="date_start" readonly="state_code == 'done'"/>
                             <field name="date_end" readonly="state_code == 'done'"/>
                             <field name="intervention_method_id" readonly="state_code == 'done'"/>
                             <field name="km" readonly="state_code == 'done'"/>
-                            <field name="state_id" readonly="state_code == 'done'"/>
+                            <field name="state_id"/>
                             <field name="notes" readonly="state_code == 'done'"/>
                             <button name="action_open_signature_wizard" string="Firmar" type="object"
                                     class="btn-link"/>
@@ -132,7 +132,7 @@
                 <field name="date_end" readonly="state_code == 'done'"/>
                 <field name="intervention_method_id" readonly="state_code == 'done'"/>
                 <field name="km" readonly="state_code == 'done'"/>
-                <field name="state_id" readonly="state_code == 'done'"/>
+                <field name="state_id"/>
                 <field name="notes" readonly="state_code == 'done'"/>
                 <button name="action_open_signature_wizard" string="Firmar" type="object"
                         class="btn-link"/>
