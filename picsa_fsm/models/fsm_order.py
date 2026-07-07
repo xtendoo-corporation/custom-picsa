@@ -226,6 +226,17 @@ class FSMOrder(models.Model):
             "target": "current",
         }
 
+    def action_view_invoices(self):
+        self.ensure_one()
+        return {
+            "type": "ir.actions.act_window",
+            "name": _("Facturas"),
+            "res_model": "account.move",
+            "view_mode": "tree,form",
+            "domain": self._get_picsa_invoice_domain(),
+            "context": {"create": False},
+        }
+
     def init(self):
         self.env.cr.execute("""
             UPDATE fsm_order

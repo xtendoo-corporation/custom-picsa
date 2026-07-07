@@ -62,6 +62,26 @@
             </xpath>
             <xpath expr="//button[@name='action_create_sale_order']" position="attributes">
                 <attribute name="invisible">sale_count &gt; 0</attribute>
+                <attribute name="groups">sales_team.group_sale_salesman</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_view_sale_orders']" position="attributes">
+                <attribute name="groups">sales_team.group_sale_salesman</attribute>
+            </xpath>
+
+            <xpath expr="//button[@name='action_create_sale_order']" position="after">
+                <button name="action_create_invoice" string="Crear Factura"
+                        type="object" class="btn-secondary"
+                        groups="account.group_account_invoice"
+                        invisible="invoice_count &gt; 0"/>
+            </xpath>
+
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_view_invoices" type="object"
+                        class="oe_stat_button" icon="fa-pencil-square-o"
+                        groups="account.group_account_invoice"
+                        invisible="invoice_count == 0">
+                    <field name="invoice_count" widget="statinfo" string="Facturas"/>
+                </button>
             </xpath>
 
             <xpath expr="//group[@name='basic_info']" position="replace"/>
